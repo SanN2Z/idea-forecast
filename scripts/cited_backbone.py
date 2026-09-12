@@ -193,7 +193,9 @@ def main(argv=None):
     if a.recent_days:
         start = (dt.date.today() - dt.timedelta(days=a.recent_days)).isoformat()
         merged = {}
-        for q in a.query:
+        for i, q in enumerate(a.query):
+            if i:
+                time.sleep(4)  # arXiv API: >= 3 s between requests, also across queries (429 otherwise)
             for w in fetch_arxiv_recent(q, start, a.pool):
                 merged.setdefault(w["id"], w)
         if not merged:
